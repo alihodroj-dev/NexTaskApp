@@ -11,7 +11,7 @@ import SwiftUI
 struct NexTaskApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoadingView()
         }
     }
 }
