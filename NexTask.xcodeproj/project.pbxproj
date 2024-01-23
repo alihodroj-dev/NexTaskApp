@@ -14,6 +14,9 @@
 		196EE9A62B5DD2C500BACD9F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9A52B5DD2C500BACD9F /* HomeView.swift */; };
 		196EE9A82B5DD3EA00BACD9F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9A72B5DD3EA00BACD9F /* HomeViewModel.swift */; };
 		196EE9AB2B5DD82700BACD9F /* UsernameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9AA2B5DD82700BACD9F /* UsernameSheet.swift */; };
+		196EE9AE2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9AC2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld */; };
+		196EE9B02B5EE2E900BACD9F /* AddTaskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9AF2B5EE2E800BACD9F /* AddTaskSheet.swift */; };
+		196EE9B22B5EE45100BACD9F /* ReminderOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9B12B5EE45100BACD9F /* ReminderOptions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,9 @@
 		196EE9A52B5DD2C500BACD9F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		196EE9A72B5DD3EA00BACD9F /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		196EE9AA2B5DD82700BACD9F /* UsernameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsernameSheet.swift; sourceTree = "<group>"; };
+		196EE9AD2B5EDB1F00BACD9F /* TasksContainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TasksContainer.xcdatamodel; sourceTree = "<group>"; };
+		196EE9AF2B5EE2E800BACD9F /* AddTaskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskSheet.swift; sourceTree = "<group>"; };
+		196EE9B12B5EE45100BACD9F /* ReminderOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				196EE9922B5DCAE100BACD9F /* NexTaskApp.swift */,
+				196EE9AC2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld */,
 				196EE9A02B5DCAEE00BACD9F /* Models */,
 				196EE9A22B5DCAFA00BACD9F /* ViewModels */,
 				196EE9A12B5DCAF400BACD9F /* Views */,
@@ -79,6 +86,7 @@
 		196EE9A02B5DCAEE00BACD9F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				196EE9B12B5EE45100BACD9F /* ReminderOptions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -104,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				196EE9AA2B5DD82700BACD9F /* UsernameSheet.swift */,
+				196EE9AF2B5EE2E800BACD9F /* AddTaskSheet.swift */,
 			);
 			path = Sheets;
 			sourceTree = "<group>";
@@ -178,6 +187,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				196EE9AE2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld in Sources */,
+				196EE9B02B5EE2E900BACD9F /* AddTaskSheet.swift in Sources */,
+				196EE9B22B5EE45100BACD9F /* ReminderOptions.swift in Sources */,
 				196EE9A62B5DD2C500BACD9F /* HomeView.swift in Sources */,
 				196EE9932B5DCAE100BACD9F /* NexTaskApp.swift in Sources */,
 				196EE9AB2B5DD82700BACD9F /* UsernameSheet.swift in Sources */,
@@ -396,6 +408,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		196EE9AC2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				196EE9AD2B5EDB1F00BACD9F /* TasksContainer.xcdatamodel */,
+			);
+			currentVersion = 196EE9AD2B5EDB1F00BACD9F /* TasksContainer.xcdatamodel */;
+			path = TasksContainer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 196EE9872B5DCAE100BACD9F /* Project object */;
 }
