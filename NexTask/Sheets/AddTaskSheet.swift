@@ -47,6 +47,7 @@ struct AddTaskSheet: View {
                 // description textfield
                 TextField("", text: $taskDescription)
                     .frame(height: 50)
+                    .multilineTextAlignment(.leading)
                     .padding(10)
                     .background { Color.gray.opacity(0.2).clipShape(RoundedRectangle(cornerRadius: 12)) }
                 // date and time

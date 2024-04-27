@@ -68,7 +68,7 @@ struct UsernameSheet: View {
             // saving
             UserDefaults.standard.set(name, forKey: "USERNAME")
             // updating the UI
-            withAnimation {
+            withAnimation(.easeIn) {
                 viewModel.userName = name
             }
             // dismissing the sheet

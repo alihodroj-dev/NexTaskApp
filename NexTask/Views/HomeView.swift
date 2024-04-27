@@ -9,6 +9,13 @@ import SwiftUI
 
 struct HomeView: View {
     
+    init() {
+        // styling the segmented picker
+        UISegmentedControl.appearance().selectedSegmentTintColor = .accent
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor : UIColor.white], for: .normal)
+        UISegmentedControl.appearance().backgroundColor = UIColor(white: 1, alpha: 0.05)
+    }
+    
     // ViewModel
     @ObservedObject private var viewModel: HomeViewModel = HomeViewModel()
     
@@ -20,10 +27,10 @@ struct HomeView: View {
                 // background color
                 Color.bg.ignoresSafeArea()
                 // main container
-                VStack {
+                VStack(spacing: 0) {
                     // topBar
                     HStack(spacing: 15) {
-                        // pfp
+                        // image
                         Image("NexTaskLogo")
                             .resizable()
                             .frame(width: 50, height: 50)
@@ -43,7 +50,7 @@ struct HomeView: View {
                                 }
                             // todays' tasks
                             Text(String(viewModel.numberOfTasksToday) + " tasks for today")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(.gray)
                         }
                         // spacer
                         Spacer()
@@ -61,110 +68,50 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, 25)
                     .padding(.vertical, 20)
-                    // body
-                    // due today tasks
-                    VStack {
-                        HStack {
-                            // title
-                            Text("Due Today")
-                                .foregroundStyle(.white)
-                                .font(.title3)
-                                .bold()
-                            Spacer()
-                            // view all button
-                            Button {
-                                // todo
-                            } label: {
-                                Text("View all")
-                                    .foregroundStyle(.accent)
-                            }
-                            
-                        }
-                        .padding()
-                        // first two tasks
-                        
-                        ForEach(viewModel.todayTaskEntities) { task in
-                            Text(task.title!)
-                        }
-                        
-                        
+                    // search bar
+                    HStack(spacing: 0) {
+                        // icon
+                        Image(systemName: "magnifyingglass")
+                            .padding(.leading)
+                            .foregroundStyle(.accent)
+                            .bold()
+                        // textfield
+                        TextField("Search", text: $viewModel.searchValue)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 35)
+                            .padding(.leading)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .background { Color.black.opacity(0.2).clipShape(RoundedRectangle(cornerRadius: 22)) }
+                    .background { Color.gray.opacity(0.2).clipShape(RoundedRectangle(cornerRadius: 12)) }
                     .padding(.horizontal)
-                    // Upcoming tasks
-                    VStack {
-                        HStack {
-                            // title
-                            Text("Upcoming")
-                                .foregroundStyle(.white)
-                                .font(.title3)
-                                .bold()
-                            Spacer()
-                            // view all button
-                            Button {
-                                // todo
-                            } label: {
-                                Text("View all")
-                                    .foregroundStyle(.accent)
-                            }
-                            
+                    // task list type picker
+                    Picker("", selection: $viewModel.taskListTypeSelection) {
+                        ForEach(TaskListType.allCases, id:\.self) { type in
+                            Text(type.rawValue)
                         }
-                        .padding()
-                        
-                        ScrollView(.vertical) {
-                            ForEach(viewModel.upcomingTaskEntities) { task in
-                                Text(task.title!)
-                            }
-                        }
-                        
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .background { Color.black.opacity(0.2).clipShape(RoundedRectangle(cornerRadius: 22)) }
-                    .padding(.horizontal)
-                    // completed tasks
-                    VStack {
-                        HStack {
-                            // title
-                            Text("Completed")
-                                .foregroundStyle(.white)
-                                .font(.title3)
-                                .bold()
-                            Spacer()
-                            // view all button
-                            Button {
-                                // todo
-                            } label: {
-                                Text("View all")
-                                    .foregroundStyle(.accent)
-                            }
-                            
+                    .pickerStyle(.segmented)
+                    .padding()
+                    // task list
+                    ScrollView(.vertical) {
+                        ForEach(viewModel.tasksShown) {
+                            TaskView(task: $0, vm: viewModel)
+                                .frame(maxHeight: 150)
                         }
-                        .padding()
-                        
-                        ScrollView(.vertical) {
-                            ForEach(viewModel.completedTaskEntities) { task in
-                                Text(task.title!)
-                            }
-                        }
-                        
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .background { Color.black.opacity(0.2).clipShape(RoundedRectangle(cornerRadius: 22)) }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(.horizontal)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                // USERNAME SHEET
+                .sheet(isPresented: $viewModel.userNameSheetIsPresented) {
+                    UsernameSheet(viewModel: viewModel)
+                        .presentationDetents([.fraction(0.2)])
+                }
+                // ADD TASK SHEET
+                .sheet(isPresented: $viewModel.addTaskSheetIsPresented, content: {
+                    AddTaskSheet(viewModel: viewModel)
+                        .presentationDetents([.fraction(0.6)])
+                })
             }
-            // USERNAME SHEET
-            .sheet(isPresented: $viewModel.userNameSheetIsPresented) {
-                UsernameSheet(viewModel: viewModel)
-                    .presentationDetents([.fraction(0.2)])
-            }
-            // ADD TASK SHEET
-            .sheet(isPresented: $viewModel.addTaskSheetIsPresented, content: {
-                AddTaskSheet(viewModel: viewModel)
-                    .presentationDetents([.fraction(0.6)])
-            })
         }
     }
 }
@@ -172,3 +119,100 @@ struct HomeView: View {
 #Preview {
     HomeView()
 }
+
+@ViewBuilder
+private func TaskView(task: TaskEntity, vm: HomeViewModel) -> some View {
+    HStack(spacing: 10) {
+        // title and desc
+        VStack(alignment: .leading, spacing: 5) {
+            Text("Title")
+                .font(.caption)
+                .foregroundStyle(.accent)
+                .bold()
+            Text(task.title!)
+                .foregroundStyle(.white)
+                .font(.headline)
+                .lineLimit(nil)
+            Text("Description")
+                .font(.caption)
+                .foregroundStyle(.accent)
+                .bold()
+            Text(task.desc!)
+                .foregroundStyle(.white)
+                .font(.caption)
+                .lineLimit(nil)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 8)
+        .padding(.leading, 10)
+        // line spacer
+        RoundedRectangle(cornerRadius: 2)
+            .foregroundStyle(.accent)
+            .frame(width: 2)
+            .padding(.vertical)
+        // time and date
+        VStack(alignment: .leading, spacing: 10) {
+            if(task.dueDate!.timeIntervalSince1970 < Date.now.timeIntervalSince1970 && !task.isCompleted) {
+                Text("OVERDUE")
+                    .font(.subheadline)
+                    .bold()
+                    .foregroundStyle(.red)
+            }
+            HStack(spacing: 0) {
+                Text("Due: ")
+                    .foregroundStyle(.white)
+                    .font(.subheadline)
+                    .bold()
+                    .lineLimit(1)
+                Text(task.dueDate!.formatted(date: .abbreviated, time: .omitted) as String)
+                    .foregroundStyle(.white.opacity(0.8))
+                    .font(.subheadline)
+                    .fontWeight(.light)
+                    .lineLimit(1)
+            }
+            HStack(spacing: 0) {
+                Text("Time: ")
+                    .foregroundStyle(.white)
+                    .font(.subheadline)
+                    .bold()
+                    .lineLimit(1)
+                Text(task.dueDate!.formatted(date: .omitted, time: .shortened) as String)
+                    .foregroundStyle(.white.opacity(0.8))
+                    .font(.subheadline)
+                    .fontWeight(.light)
+                    .lineLimit(1)
+            }
+        }
+        // line spacer
+        RoundedRectangle(cornerRadius: 2)
+            .foregroundStyle(.accent)
+            .frame(width: 2)
+            .padding(.vertical)
+        // mark as completed and delete
+        VStack(spacing: 5) {
+            // completed button
+            if(!task.isCompleted) {
+                Button {
+                    vm.updateTask(task: task)
+                } label: {
+                    Image(systemName: "checkmark.square.fill")
+                        .foregroundStyle(.accent)
+                        .font(.title)
+                }
+            }
+            // delete button
+            Button {
+                vm.deleteTask(task: task)
+            } label: {
+                Image(systemName: "trash.square.fill")
+                    .foregroundStyle(.accent)
+                    .font(.title)
+            }
+        }
+        .padding(.vertical)
+        .padding(.trailing, 10)
+    }
+    .frame(maxWidth: .infinity)
+    .background { Color.accentColor.opacity(0.2).clipShape(RoundedRectangle(cornerRadius: 12)) }
+}
+

@@ -17,6 +17,7 @@
 		196EE9AE2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9AC2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld */; };
 		196EE9B02B5EE2E900BACD9F /* AddTaskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9AF2B5EE2E800BACD9F /* AddTaskSheet.swift */; };
 		196EE9B22B5EE45100BACD9F /* ReminderOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196EE9B12B5EE45100BACD9F /* ReminderOptions.swift */; };
+		19A07D7E2B61CE8F005E2472 /* TaskListType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A07D7D2B61CE8F005E2472 /* TaskListType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		196EE9AD2B5EDB1F00BACD9F /* TasksContainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TasksContainer.xcdatamodel; sourceTree = "<group>"; };
 		196EE9AF2B5EE2E800BACD9F /* AddTaskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskSheet.swift; sourceTree = "<group>"; };
 		196EE9B12B5EE45100BACD9F /* ReminderOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderOptions.swift; sourceTree = "<group>"; };
+		19A07D7D2B61CE8F005E2472 /* TaskListType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				196EE9B12B5EE45100BACD9F /* ReminderOptions.swift */,
+				19A07D7D2B61CE8F005E2472 /* TaskListType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 			files = (
 				196EE9AE2B5EDB1F00BACD9F /* TasksContainer.xcdatamodeld in Sources */,
 				196EE9B02B5EE2E900BACD9F /* AddTaskSheet.swift in Sources */,
+				19A07D7E2B61CE8F005E2472 /* TaskListType.swift in Sources */,
 				196EE9B22B5EE45100BACD9F /* ReminderOptions.swift in Sources */,
 				196EE9A62B5DD2C500BACD9F /* HomeView.swift in Sources */,
 				196EE9932B5DCAE100BACD9F /* NexTaskApp.swift in Sources */,
@@ -339,7 +343,7 @@
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -372,7 +376,7 @@
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

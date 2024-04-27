@@ -15,17 +15,101 @@ final class HomeViewModel: ObservableObject {
     // UI
     @Published var userName: String
     @Published var numberOfTasksToday: Int = 0
+    @Published var searchValue: String = "" {
+        didSet {
+            if(!self.searchValue.isEmpty) {
+                switch taskListTypeSelection {
+                case .DueToday:
+                    self.tasksShown = self.todayTaskEntities.filter({ task in
+                        if(task.title!.contains(self.searchValue)) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                case .Upcoming:
+                    self.tasksShown = self.upcomingTaskEntities.filter({ task in
+                        if(task.title!.contains(self.searchValue)) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                case .Completed:
+                    self.tasksShown = self.completedTaskEntities.filter({ task in
+                        if(task.title!.contains(self.searchValue)) {
+                            return true
+                        } else {
+                            return false
+                        }
+                    })
+                }
+            } else {
+                withAnimation(.easeInOut) {
+                    switch taskListTypeSelection {
+                    case .DueToday:
+                        self.tasksShown = self.todayTaskEntities
+                    case .Upcoming:
+                        self.tasksShown = self.upcomingTaskEntities
+                    case .Completed:
+                        self.tasksShown = self.completedTaskEntities
+                    }
+                }
+            }
+        }
+    }
+    @Published var taskListTypeSelection: TaskListType = .DueToday {
+        didSet {
+            withAnimation(.bouncy) {
+                switch self.taskListTypeSelection {
+                case .DueToday:
+                    self.tasksShown = self.todayTaskEntities
+                case .Upcoming:
+                    self.tasksShown = self.upcomingTaskEntities
+                case .Completed:
+                    self.tasksShown = self.completedTaskEntities
+                }
+            }
+            
+        }
+    }
+    @Published var tasksShown: [TaskEntity] = []
     
     // SHEET STATES
     @Published var userNameSheetIsPresented: Bool = false
     @Published var addTaskSheetIsPresented: Bool = false
     
     // CORE DATA
-    let container: NSPersistentContainer
-    @Published var todayTaskEntities: [TaskEntity] = []
-    @Published var upcomingTaskEntities: [TaskEntity] = []
-    @Published var completedTaskEntities: [TaskEntity] = []
+    var container: NSPersistentContainer
+    @Published var todayTaskEntities: [TaskEntity] = [] {
+        didSet {
+            if(self.taskListTypeSelection == .DueToday) {
+                withAnimation(.bouncy) {
+                    self.tasksShown = self.todayTaskEntities
+                }
+            }
+        }
+    }
+    @Published var upcomingTaskEntities: [TaskEntity] = [] {
+        didSet {
+            if(self.taskListTypeSelection == .Upcoming) {
+                withAnimation(.bouncy) {
+                    self.tasksShown = self.upcomingTaskEntities
+                }
+            }
+        }
+    }
+    @Published var completedTaskEntities: [TaskEntity] = [] {
+        didSet {
+            if(self.taskListTypeSelection == .Completed) {
+                withAnimation(.bouncy) {
+                    self.tasksShown = self.completedTaskEntities
+                }
+            }
+        }
+    }
     
+    // SETUP
     init() {
         // UI SETUP
         self.userName = UserDefaults.standard.string(forKey: "USERNAME") ?? ""
@@ -37,12 +121,10 @@ final class HomeViewModel: ObservableObject {
                 print("Error loading coreData")
             } else {
                 print("LOADED CORE DATA SUCCESSFULLY")
-                withAnimation(.bouncy) {
-                    self.fetchTasks()
-                }
+                self.fetchTasks()
             }
         }
-        // NOTIFICATIONS
+        // NOTIFICATIONS SETUP
         checkNotificationPermission()
     }
     
@@ -59,21 +141,31 @@ final class HomeViewModel: ObservableObject {
             print("error fetching")
         }
         // reseting data before adding new data
+        self.tasksShown = []
         self.todayTaskEntities = []
         self.upcomingTaskEntities = []
         self.completedTaskEntities = []
+        self.numberOfTasksToday = 0
         // filtering tasks
-        for task in fetchedTasks {
-            if(task.isCompleted) {
-                self.completedTaskEntities.append(task)
-                self.numberOfTasksToday += 1
-            } else {
-                let dateDay = Calendar.current.dateComponents([.day], from: task.dueDate!)
-                let today = Calendar.current.dateComponents([.day], from: Date.now)
-                if(dateDay == today) {
-                    self.todayTaskEntities.append(task)
+        withAnimation(.bouncy) {
+            for task in fetchedTasks {
+                if(task.isCompleted) {
+                    self.completedTaskEntities.append(task)
                 } else {
-                    self.upcomingTaskEntities.append(task)
+                    let dateDay = Calendar.current.dateComponents([.day], from: task.dueDate!)
+                    let today = Calendar.current.dateComponents([.day], from: Date.now)
+                    if(dateDay == today) {
+                        self.todayTaskEntities.append(task)
+                        self.numberOfTasksToday += 1
+                    } else {
+                        let taskDayInSeconds = task.dueDate!.timeIntervalSince1970
+                        let todayDateInSeconds = Date.now.timeIntervalSince1970
+                        if(taskDayInSeconds < todayDateInSeconds) {
+                            self.todayTaskEntities.insert(task, at: 0)
+                        } else {
+                            self.upcomingTaskEntities.append(task)
+                        }
+                    }
                 }
             }
         }
@@ -89,6 +181,16 @@ final class HomeViewModel: ObservableObject {
         // adding notification
         scheduleNotification(title: title, desc: desc, dueDate: dueDate, option: option)
         // saving
+        self.saveData()
+    }
+    
+    func deleteTask(task: TaskEntity) {
+        self.container.viewContext.delete(task)
+        self.saveData()
+    }
+    
+    func updateTask(task: TaskEntity) {
+        task.isCompleted = true
         self.saveData()
     }
     
@@ -139,7 +241,7 @@ private func scheduleNotification(title: String, desc: String, dueDate: Date, op
 private func checkNotificationPermission() {
     // getting current noti center
     let current = UNUserNotificationCenter.current()
-
+    
     current.getNotificationSettings(completionHandler: { (settings) in
         if settings.authorizationStatus == .notDetermined {
             // asking for permission + delaying until loading animation finishes
